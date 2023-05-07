@@ -6,9 +6,7 @@ import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
 import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
 import {VetoPlugin} from "./VetoPlugin.sol";
 
-import {MajorityVotingBase} from "@aragon/osx/plugins/governance/majority-voting/MajorityVotingBase.sol";
-
-/// @title SimpleStorageSetup build 1
+/// @title VetoPluginSetup development
 contract VetoPluginSetup is PluginSetup {
     enum VotingMode {
         Standard,

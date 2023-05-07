@@ -2,7 +2,6 @@
 pragma solidity ^0.8.7;
 
 import {SafeCastUpgradeable} from "@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol";
-// import {IVotesUpgradeable} from "@openzeppelin/contracts-upgradeable/governance/utils/IVotesUpgradeable.sol";
 
 import {IMembership} from "@aragon/osx/core/plugin/membership/IMembership.sol";
 import {IDAO} from "@aragon/osx/core/dao/IDAO.sol";
@@ -10,12 +9,10 @@ import {RATIO_BASE, _applyRatioCeiled} from "@aragon/osx/plugins/utils/Ratio.sol
 import {MajorityVotingBase} from "@aragon/osx/plugins/governance/majority-voting/MajorityVotingBase.sol";
 import {IMajorityVoting} from "@aragon/osx/plugins/governance/majority-voting/IMajorityVoting.sol";
 
-
 import {TestVotingToken} from "./TestVotingToken.sol";
 
 contract VetoPlugin is MajorityVotingBase, IMembership {
     using SafeCastUpgradeable for uint256;
-
     /// @notice The [ERC-165](https://eips.ethereum.org/EIPS/eip-165) interface ID of the contract.
     bytes4 internal constant TOKEN_VOTING_INTERFACE_ID =
         this.initializeBuild.selector ^ this.getVotingToken.selector;
@@ -78,7 +75,7 @@ contract VetoPlugin is MajorityVotingBase, IMembership {
 
         votingToken = TestVotingToken(_token);
 
-        emit MembershipContractAnnounced({definingContract: address(_token)});
+        emit MembershipContractAnnounced({definingContract: _token});
     }
 
     /// @notice Checks if this or the parent contract supports an interface by its ID.
@@ -279,24 +276,12 @@ contract VetoPlugin is MajorityVotingBase, IMembership {
         uint256 _amount,
         string calldata _reference
     ) external payable {
-        if (_amount == 0) revert ZeroAmount();
-
-        // if (_token == address(0)) {
-        //     if (msg.value != _amount)
-        //         revert NativeTokenDepositAmountMismatch({expected: _amount, actual: msg.value});
-        // } else {
-        //     if (msg.value != 0)
-        //         revert NativeTokenDepositAmountMismatch({expected: 0, actual: msg.value});
-
         uint256 taxAmount = 0;
+        if (_amount == 0) revert ZeroAmount();
         if (tax != 0) {
             taxAmount = _amount * tax / 100;
         }
         votingToken.transferFrom(msg.sender, address(this), _amount - taxAmount);
-
-        // votingToken.safeTransferFrom(address(), address(this), _amount - taxAmount);
-        // }
-
         emit Deposited(msg.sender, address(votingToken), _amount, _reference);
     }
 
