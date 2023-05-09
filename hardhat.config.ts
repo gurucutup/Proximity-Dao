@@ -23,6 +23,11 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:8545",
       timeout: 300000,
     },
+    mainnet: {
+      url: "https://mainnet.infura.io/v3/ADCD4R1QEE8Z3YPJDSVNX9II3JXJHNGVQI",
+      chainId: 1,
+      accounts: [process.env.PRIVATE_KEY],
+    },
     bsc: {
       url: "https://bsc-mainnet.nodereal.io/v1/083880c5faac4d7ca5b451a403575f08",
       chainId: 56,
@@ -41,6 +46,11 @@ const config: HardhatUserConfig = {
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/",
       chainId: 4,
+      accounts: [process.env.PRIVATE_KEY],
+    },
+    polygon: {
+      url: "https://rpc-mainnet.maticvigil.com",
+      chainId: 137,
       accounts: [process.env.PRIVATE_KEY],
     },
     mumbai: {
@@ -70,7 +80,8 @@ const config: HardhatUserConfig = {
     timeout: 40000
   },
   etherscan: {
-    apiKey: process.env.MUMBAI_API_KEY
+    apiKey: process.env.POLYGON_API_KEY
+    // apiKey: process.env.GOERLI_API_KEY
   }
 };
 
