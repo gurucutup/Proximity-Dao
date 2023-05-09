@@ -37,7 +37,9 @@ async function main() {
   // console.log(`VetoPluginSetup contract deployed to ${vetoPluginSetup.address}\n`);
 
   // PluginSetup Deploy
-  const deployer = new ethers.Wallet(process.env.PRIVATE_KEY);
+  const provider = new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com/');
+
+  const deployer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
   const pluginRepoFactory = PluginRepoFactory__factory.connect(
     addresses.mumbai.PluginRepoFactory,
     deployer,
@@ -52,6 +54,9 @@ async function main() {
     toHex(buildMetadataUri),
     {gasLimit: 1000000}
   );
+
+
+  console.log(tx.hash)
     
   // await verifyContract(testVotingToken.address, [10000000]);
   // await verifyContract(vetoPluginSetup.address);
