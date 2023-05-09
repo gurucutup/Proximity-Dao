@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "npx hardhat run scripts/deploy.ts --network goerli",
-    "deploy-mumbai": "npx hardhat run scripts/deploy.ts --network mumbai"
+    "deploy-mumbai": "npx hardhat run scripts/deploy.ts --network mumbai",
+    "deploy-polygon": "npx hardhat run scripts/deploy.ts --network polygon"
   },
   "author": "",
   "license": "ISC",
