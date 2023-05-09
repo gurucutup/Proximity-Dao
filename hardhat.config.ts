@@ -54,7 +54,7 @@ const config: HardhatUserConfig = {
       accounts: [process.env.PRIVATE_KEY],
     },
     mumbai: {
-      url: "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78",
+      url: "https://rpc.ankr.com/polygon_mumbai",
       // url: "https://rpc-mumbai.maticvigil.com/",
       // url: "https://polygon-mumbai.blockpi.network/v1/rpc/public",
       // url: "https://api-testnet.polygonscan.com/",
