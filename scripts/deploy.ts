@@ -2,6 +2,7 @@
 import { ethers } from "hardhat";
 import hre from "hardhat";
 import {PluginRepoFactory__factory} from '@aragon/osx-ethers';
+import { uploadToIpfs } from "../ipfsHelper";
 
 import * as addresses from '../address.json';
 import * as releaseMetaDataUri from '../releaseMetadata.json';
@@ -36,23 +37,26 @@ async function main() {
   
   // console.log(`VetoPluginSetup contract deployed to ${vetoPluginSetup.address}\n`);
 
-  // PluginSetup Deploy
-  const provider = new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com/');
+  // Upload to IPFS
+  const releaseMetadata = await uploadToIpfs(JSON.stringify(releaseMetaDataUri));
+  console.log("Release metadata uploaded to ", releaseMetadata);
+  const buildMetadata = await uploadToIpfs(JSON.stringify(buildMetadataUri));
+  console.log("Build metadata uploaded to ", buildMetadata);
 
-  const deployer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+  // PluginSetup Deploy
+  const [deployer] = await ethers.getSigners();
   const pluginRepoFactory = PluginRepoFactory__factory.connect(
     addresses.mumbai.PluginRepoFactory,
     deployer,
   );
 
   const tx = await pluginRepoFactory.createPluginRepoWithFirstVersion(
-    "Sub-Dao",
+    "Sub-DaoTestPlopmenz",
     // VetoPluginSetup.address,
     "0x44AD088f94234c97fa46D977D9Ca77a48081C181",
     "0x1e1a5D6E2B6a858c2879ccEF69215e41782C58fb",
-    toHex(releaseMetaDataUri),
-    toHex(buildMetadataUri),
-    {gasLimit: 1000000}
+    toHex(releaseMetadata),
+    toHex(buildMetadata)
   );
 
 
