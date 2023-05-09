@@ -51,7 +51,7 @@ async function main() {
   );
 
   const tx = await pluginRepoFactory.createPluginRepoWithFirstVersion(
-    "Sub-DaoTestPlopmenz",
+    "subdaotestplopmenz2",
     // VetoPluginSetup.address,
     "0x44AD088f94234c97fa46D977D9Ca77a48081C181",
     "0x1e1a5D6E2B6a858c2879ccEF69215e41782C58fb",
@@ -61,6 +61,10 @@ async function main() {
 
 
   console.log(tx.hash)
+
+  const receipt = await tx.wait();
+
+  console.log(receipt.transactionHash);
     
   // await verifyContract(testVotingToken.address, [10000000]);
   // await verifyContract(vetoPluginSetup.address);
