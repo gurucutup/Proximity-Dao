@@ -3,8 +3,6 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 require("dotenv").config();
 
-console.log(process.env.PRIVATE_KEY)
-
 const config: HardhatUserConfig = {
   solidity: {
     version: "0.8.17",
@@ -32,7 +30,7 @@ const config: HardhatUserConfig = {
     },
     bsctestnet: {
       url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
-      accounts: ["0xf488e1f64d370b6817e5c60ec0f71c4de48a2f6b254e7f696726f9f90b87be76"],
+      accounts: [process.env.PRIVATE_KEY_BSC],
       chainId: 97,
     },
     core: {
@@ -45,13 +43,21 @@ const config: HardhatUserConfig = {
       chainId: 4,
       accounts: [process.env.PRIVATE_KEY],
     },
+    mumbai: {
+      url: "https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78",
+      // url: "https://rpc-mumbai.maticvigil.com/",
+      // url: "https://polygon-mumbai.blockpi.network/v1/rpc/public",
+      // url: "https://api-testnet.polygonscan.com/",
+      chainId: 80001,
+      accounts: [process.env.PRIVATE_KEY],
+    },
     goerli: {
       url: "https://goerli.blockpi.network/v1/rpc/public",
       chainId: 5,
       accounts: [process.env.PRIVATE_KEY],
-      gas: 'auto',
-      gasPrice: 1000000000, // 1 gwei (in wei)
-      gasMultiplier: 1.5 // Multiplier to apply to `gas` to increase/decrease it.
+      // gas: 'auto',
+      // gasPrice: 1000000000, // 1 gwei (in wei)
+      // gasMultiplier: 1.5 // Multiplier to apply to `gas` to increase/decrease it.
     },
   },
   paths: {
@@ -64,7 +70,7 @@ const config: HardhatUserConfig = {
     timeout: 40000
   },
   etherscan: {
-    apiKey: process.env.BSC_TESTNET_API_KEY
+    apiKey: process.env.MUMBAI_API_KEY
   }
 };
 

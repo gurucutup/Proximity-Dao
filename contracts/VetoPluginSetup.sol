@@ -6,9 +6,7 @@ import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
 import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
 import {VetoPlugin} from "./VetoPlugin.sol";
 
-import {MajorityVotingBase} from "@aragon/osx/plugins/governance/majority-voting/MajorityVotingBase.sol";
-
-/// @title SimpleStorageSetup build 1
+/// @title VetoPluginSetup development
 contract VetoPluginSetup is PluginSetup {
     enum VotingMode {
         Standard,
@@ -50,7 +48,7 @@ contract VetoPluginSetup is PluginSetup {
         );
 
         PermissionLib.MultiTargetPermission[]
-            memory permissions = new PermissionLib.MultiTargetPermission[](1);
+            memory permissions = new PermissionLib.MultiTargetPermission[](2);
 
         permissions[0] = PermissionLib.MultiTargetPermission({
             operation: PermissionLib.Operation.Grant,
@@ -60,6 +58,16 @@ contract VetoPluginSetup is PluginSetup {
             permissionId: keccak256("VETO_PERMISSION")
         });
 
+        
+        permissions[1] = PermissionLib.MultiTargetPermission({
+            operation: PermissionLib.Operation.Grant,
+            where: plugin,
+            who: _dao,
+            condition: PermissionLib.NO_CONDITION,
+            permissionId: keccak256("TAX_PERMISSION")
+        });
+
+
         preparedSetupData.permissions = permissions;
     }
 
@@ -68,7 +76,7 @@ contract VetoPluginSetup is PluginSetup {
         address _dao,
         SetupPayload calldata _payload
     ) external pure returns (PermissionLib.MultiTargetPermission[] memory permissions) {
-        permissions = new PermissionLib.MultiTargetPermission[](3);
+        permissions = new PermissionLib.MultiTargetPermission[](2);
 
         permissions[0] = PermissionLib.MultiTargetPermission({
             operation: PermissionLib.Operation.Revoke,
@@ -76,6 +84,14 @@ contract VetoPluginSetup is PluginSetup {
             who: _dao,
             condition: PermissionLib.NO_CONDITION,
             permissionId: keccak256("VETO_PERMISSION")
+        });
+
+        permissions[0] = PermissionLib.MultiTargetPermission({
+            operation: PermissionLib.Operation.Revoke,
+            where: _payload.plugin,
+            who: _dao,
+            condition: PermissionLib.NO_CONDITION,
+            permissionId: keccak256("TAX_PERMISSION")
         });
     }
 
