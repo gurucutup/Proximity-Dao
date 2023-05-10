@@ -1,12 +1,12 @@
 // @ts-nocheck
 import { ethers } from "hardhat";
 import hre from "hardhat";
-import {PluginRepoFactory__factory} from '@aragon/osx-ethers';
+import { PluginRepoFactory__factory } from "@aragon/osx-ethers";
 import { uploadToIpfs } from "../ipfsHelper";
 
-import * as addresses from '../address.json';
-import * as releaseMetaDataUri from '../releaseMetadata.json';
-import * as buildMetadataUri from '../metadata.json';
+import * as addresses from "../address.json";
+import * as releaseMetaDataUri from "../releaseMetadata.json";
+import * as buildMetadataUri from "../metadata.json";
 
 const verifyContract = async (_address, _args) => {
   if (_args)
@@ -25,20 +25,28 @@ export function toHex(input: string): BytesLike {
 }
 
 async function main() {
-  // const TestVotingToken = await ethers.getContractFactory("TestVotingToken");
-  // const testVotingToken = await TestVotingToken.deploy(10000000);
-  // await testVotingToken.deployed();
-  
-  // console.log(`TestVotingToken contract deployed to ${testVotingToken.address}`);
-  
-  // const VetoPluginSetup = await ethers.getContractFactory("VetoPluginSetup");
-  // const vetoPluginSetup = await VetoPluginSetup.deploy();
-  // await vetoPluginSetup.deployed();
-  
-  // console.log(`VetoPluginSetup contract deployed to ${vetoPluginSetup.address}\n`);
+  const TestVotingToken = await ethers.getContractFactory("TestVotingToken");
+  const testVotingToken = await TestVotingToken.deploy(10000000);
+  await testVotingToken.deployed();
 
-  // Upload to IPFS
-  const releaseMetadata = await uploadToIpfs(JSON.stringify(releaseMetaDataUri));
+  console.log(testVotingToken.address);
+
+  console.log(
+    `TestVotingToken contract deployed to ${testVotingToken.address}`
+  );
+
+  const VetoPluginSetup = await ethers.getContractFactory("VetoPluginSetup");
+  const vetoPluginSetup = await VetoPluginSetup.deploy();
+  await vetoPluginSetup.deployed();
+
+  console.log(
+    `VetoPluginSetup contract deployed to ${vetoPluginSetup.address}\n`
+  );
+
+  // // Upload to IPFS
+  const releaseMetadata = await uploadToIpfs(
+    JSON.stringify(releaseMetaDataUri)
+  );
   console.log("Release metadata uploaded to ", releaseMetadata);
   const buildMetadata = await uploadToIpfs(JSON.stringify(buildMetadataUri));
   console.log("Build metadata uploaded to ", buildMetadata);
@@ -46,26 +54,25 @@ async function main() {
   // PluginSetup Deploy
   const [deployer] = await ethers.getSigners();
   const pluginRepoFactory = PluginRepoFactory__factory.connect(
-    addresses.mumbai.PluginRepoFactory,
-    deployer,
+    addresses.polygon.PluginRepoFactory,
+    deployer
   );
-
+  console.log("deploying plugin repo factory");
   const tx = await pluginRepoFactory.createPluginRepoWithFirstVersion(
-    "subdaotestplopmenz2",
-    // VetoPluginSetup.address,
-    "0x44AD088f94234c97fa46D977D9Ca77a48081C181",
-    "0x1e1a5D6E2B6a858c2879ccEF69215e41782C58fb",
+    "aithon",
+    VetoPluginSetup.address,
+    // "0xBAB8177FDABF43076cdBb46175f5277AF1d5680B",
+    "0x4711294a54bfd1dc53e051e532af216ef54b1023",
     toHex(releaseMetadata),
     toHex(buildMetadata)
   );
 
-
-  console.log(tx.hash)
+  console.log(tx.hash);
 
   const receipt = await tx.wait();
 
   console.log(receipt.transactionHash);
-    
+
   // await verifyContract(testVotingToken.address, [10000000]);
   // await verifyContract(vetoPluginSetup.address);
 }

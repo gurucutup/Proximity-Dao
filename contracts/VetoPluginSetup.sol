@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 pragma solidity ^0.8.8;
-
+import {DAO} from "@aragon/osx/core/dao/DAO.sol";
 import {PermissionLib} from "@aragon/osx/core/permission/PermissionLib.sol";
 import {PluginSetup, IPluginSetup} from "@aragon/osx/framework/plugin/setup/PluginSetup.sol";
 import {VetoPlugin} from "./VetoPlugin.sol";
@@ -48,7 +48,7 @@ contract VetoPluginSetup is PluginSetup {
         );
 
         PermissionLib.MultiTargetPermission[]
-            memory permissions = new PermissionLib.MultiTargetPermission[](2);
+            memory permissions = new PermissionLib.MultiTargetPermission[](3);
 
         permissions[0] = PermissionLib.MultiTargetPermission({
             operation: PermissionLib.Operation.Grant,
@@ -67,6 +67,15 @@ contract VetoPluginSetup is PluginSetup {
             permissionId: keccak256("TAX_PERMISSION")
         });
 
+// Grant `EXECUTE_PERMISSION` of the DAO to the plugin.
+        permissions[2] = PermissionLib.MultiTargetPermission(
+            PermissionLib.Operation.Grant,
+            _dao,
+            plugin,
+            PermissionLib.NO_CONDITION,
+            DAO(payable(_dao)).EXECUTE_PERMISSION_ID()
+        );
+
 
         preparedSetupData.permissions = permissions;
     }
@@ -75,8 +84,8 @@ contract VetoPluginSetup is PluginSetup {
     function prepareUninstallation(
         address _dao,
         SetupPayload calldata _payload
-    ) external pure returns (PermissionLib.MultiTargetPermission[] memory permissions) {
-        permissions = new PermissionLib.MultiTargetPermission[](2);
+    ) external view returns (PermissionLib.MultiTargetPermission[] memory permissions) {
+        permissions = new PermissionLib.MultiTargetPermission[](3);
 
         permissions[0] = PermissionLib.MultiTargetPermission({
             operation: PermissionLib.Operation.Revoke,
@@ -93,6 +102,14 @@ contract VetoPluginSetup is PluginSetup {
             condition: PermissionLib.NO_CONDITION,
             permissionId: keccak256("TAX_PERMISSION")
         });
+
+        permissions[2] = PermissionLib.MultiTargetPermission(
+            PermissionLib.Operation.Revoke,
+            _dao,
+            _payload.plugin,
+            PermissionLib.NO_CONDITION,
+            DAO(payable(_dao)).EXECUTE_PERMISSION_ID()
+        );
     }
 
     /// @inheritdoc IPluginSetup

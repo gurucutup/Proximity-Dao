@@ -37,6 +37,8 @@
     "hardhat-contract-sizer": "^2.6.1",
     "hardhat-gas-reporter": "^1.0.9",
     "solidity-coverage": "^0.7.22",
-    "typechain": "^8.1.0"
+    "ts-node": "^10.9.1",
+    "typechain": "^8.1.0",
+    "typescript": "^5.0.4"
   }
 }
