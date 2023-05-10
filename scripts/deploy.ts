@@ -37,7 +37,12 @@ async function main() {
   // console.log(`VetoPluginSetup contract deployed to ${vetoPluginSetup.address}\n`);
 
   // PluginSetup Deploy
-  const provider = new ethers.providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com/');
+  /**
+   * 
+   * TestVotingToken contract deployed to 0xA3a0E817B9D8A73efa88Bd646EB4465BC49A611E
+   * VetoPluginSetup contract deployed to 0x7ddcE896A2616f854a53B9646a52cC9Eb52b1BaB
+   */
+  const provider = new ethers.providers.JsonRpcProvider(addresses.mumbai.rpcUrl);
 
   const deployer = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
   const pluginRepoFactory = PluginRepoFactory__factory.connect(
@@ -45,19 +50,25 @@ async function main() {
     deployer,
   );
 
-  const tx = await pluginRepoFactory.createPluginRepoWithFirstVersion(
-    "Sub-Dao",
+  const gasPrice = ethers.utils.parseUnits('20', 'gwei');
+
+  const sendPromise = pluginRepoFactory.createPluginRepoWithFirstVersion(
+    "Sub-Dao-proximity-mumbai",
     // VetoPluginSetup.address,
+    // "0x7ddcE896A2616f854a53B9646a52cC9Eb52b1BaB",
     "0x44AD088f94234c97fa46D977D9Ca77a48081C181",
     "0x1e1a5D6E2B6a858c2879ccEF69215e41782C58fb",
     toHex(releaseMetaDataUri),
     toHex(buildMetadataUri),
-    {gasLimit: 1000000}
+    { gasPrice: gasPrice, gasLimit: 1000000 }
   );
 
+  sendPromise.then((tx) => {
+    console.log(`Transaction hash: ${tx.hash}`);
+  }).catch((error) => {
+    console.log(error);
+  })
 
-  console.log(tx.hash)
-    
   // await verifyContract(testVotingToken.address, [10000000]);
   // await verifyContract(vetoPluginSetup.address);
 }

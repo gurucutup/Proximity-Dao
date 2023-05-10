@@ -46,6 +46,7 @@
       "multisig-repo": "0x8c278e37D0817210E18A7958524b7D0a1fAA6F7b"
     },
     "mumbai": {
+      "rpcUrl": "https://rpc-mumbai.maticvigil.com/",
       "managingDAOImplemenation": "0x5E993db91Fd2c713Df1110358396EAc60d54fE66",
       "managingDAO": "0xE1De373E219a0d19a0500e599adb903477bCA0f9",
       "ENSRegistry": "0xD24A78824dF3C29CA03661368e6437b767A5422D",
@@ -71,6 +72,7 @@
       "multisig-repo": "0x2c4690b8be39adAd4F15A69340d5035aC6E53eEF"
     },
     "polygon": {
+      "rpcUrl": "https://rpc-mainnet.maticvigil.com",
       "AddresslistVotingSetup": "0x622DB36633643E4A4075ecc3A309a4f0B942922a",
       "AdminSetup": "0x82aBAfBf46759358c705c7E323543A7Be47AbAf0",
       "managingDAO": "0x6d4FB6Ff01A172774f42789fcfcdd84E68c28494",
